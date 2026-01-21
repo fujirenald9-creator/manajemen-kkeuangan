@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Keuangan Perusahaan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .header-subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #ff6b6b;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .currency {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .summary-value {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .danger {
+            color: #ff6b6b;
+        }
+
+        .success {
+            color: #27ae60;
+        }
+
+        .warning {
+            color: #f39c12;
+        }
+
+        .dashboard {
+            grid-column: 1 / -1;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+
+        canvas {
+            max-height: 300px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: #667eea;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            border-bottom-color: #667eea;
+            background: #f5f5f5;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .delete-btn {
+            background: #ff6b6b;
+            padding: 6px 12px;
+            font-size: 0.85em;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Manajemen Keuangan Perusahaan DOMI</h1>
+            <p class="header-subtitle">Kelola keuangan bisnis Anda dengan mudah dan efisien</p>
+        </header>
+
+        <div id="alert-container"></div>
+
+        <div class="main-content">
+            <!-- Dashboard -->
+            <div class="card dashboard">
+                <h2>Dashboard Ringkasan</h2>
+                <div class="summary-box">
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <div class="summary-label">Total Pendapatan</div>
+                            <div class="summary-value success" id="totalPendapatan">Rp 0</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Total Pengeluaran</div>
+                            <div class="summary-value danger" id="totalPengeluaran">Rp 0</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Saldo Bersih</div>
+                            <div class="summary-value" id="saloBersih">Rp 0</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Jumlah Transaksi</div>
+                            <div class="summary-value" id="jumlahTransaksi">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Transaksi -->
+            <div class="card">
+                <h2>➕ Tambah Transaksi</h2>
+                <div class="form-group">
+                    <label for="tanggal">Tanggal</label>
+                    <input type="date" id="tanggal" required>
+                </div>
+                <div class="form-group">
+                    <label for="kategori">Kategori</label>
+                    <select id="kategori" required>
+                        <option value="">Pilih Kategori</option>
+                        <option value="Pendapatan">Pendapatan</option>
+                        <option value="Gaji">Gaji Karyawan</option>
+                        <option value="Sewa">Sewa/Operasional</option>
+                        <option value="Utilitas">Utilitas</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Inventori">Inventori</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="deskripsi">Deskripsi</label>
+                    <textarea id="deskripsi" rows="2" placeholder="Keterangan transaksi..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="jumlah">Jumlah (Rp)</label>
+                    <input type="number" id="jumlah" placeholder="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="tipe">Tipe Transaksi</label>
+                    <select id="tipe" required>
+                        <option value="">Pilih Tipe</option>
+                        <option value="Pemasukan">Pemasukan</option>
+                        <option value="Pengeluaran">Pengeluaran</option>
+                    </select>
+                </div>
+                <button onclick="tambahTransaksi()">Tambah Transaksi</button>
+            </div>
+
+            <!-- Filter dan Pencarian -->
+            <div class="card">
+                <h2>🔍 Filter & Pencarian</h2>
+                <div class="form-group">
+                    <label for="filterTipe">Filter Tipe</label>
+                    <select id="filterTipe" onchange="filterTransaksi()">
+                        <option value="">Semua Tipe</option>
+                        <option value="Pemasukan">Pemasukan</option>
+                        <option value="Pengeluaran">Pengeluaran</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filterKategori">Filter Kategori</label>
+                    <select id="filterKategori" onchange="filterTransaksi()">
+                        <option value="">Semua Kategori</option>
+                        <option value="Pendapatan">Pendapatan</option>
+                        <option value="Gaji">Gaji Karyawan</option>
+                        <option value="Sewa">Sewa/Operasional</option>
+                        <option value="Utilitas">Utilitas</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Inventori">Inventori</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filterBulan">Filter Bulan</label>
+                    <input type="month" id="filterBulan" onchange="filterTransaksi()">
+                </div>
+                <button onclick="filterTransaksi()">Terapkan Filter</button>
+                <button class="btn-secondary" onclick="resetFilter()">Reset Filter</button>
+            </div>
+
+            <!-- Daftar Transaksi -->
+            <div class="card dashboard">
+                <h2>Daftar Transaksi</h2>
+                <div class="table-container">
+                    <table id="tabelTransaksi">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Kategori</th>
+                                <th>Deskripsi</th>
+                                <th>Tipe</th>
+                                <th>Jumlah</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transaksiBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: #999;">Belum ada data transaksi</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Laporan Kategori -->
+            <div class="card dashboard">
+                <h2>Laporan per Kategori</h2>
+                <div class="table-container">
+                    <table id="tabelKategori">
+                        <thead>
+                            <tr>
+                                <th>Kategori</th>
+                                <th>Pemasukan</th>
+                                <th>Pengeluaran</th>
+                                <th>Saldo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kategoriBody">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: #999;">Belum ada data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Analisa Pengeluaran -->
+            <div class="card dashboard">
+                <h2>Analisa Pengeluaran</h2>
+                <div id="analisisContainer">
+                    <p style="text-align: center; color: #999; padding: 20px;">Tambahkan transaksi untuk melihat analisa</p>
+                </div>
+            </div>
+
+            <!-- Pengaturan Anggaran -->
+            <div class="card">
+                <h2>Pengaturan Anggaran</h2>
+                <div class="form-group">
+                    <label for="kategoriAnggaran">Kategori</label>
+                    <select id="kategoriAnggaran">
+                        <option value="">Pilih Kategori</option>
+                        <option value="Gaji">Gaji Karyawan</option>
+                        <option value="Sewa">Sewa/Operasional</option>
+                        <option value="Utilitas">Utilitas</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Inventori">Inventori</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="nilaiAnggaran">Nilai Anggaran (Rp)</label>
+                    <input type="number" id="nilaiAnggaran" placeholder="0" required>
+                </div>
+                <button onclick="tambahAnggaran()">Simpan Anggaran</button>
+                <div id="daftarAnggaran" style="margin-top: 20px;"></div>
+            </div>
+
+            <!-- Export Data -->
+            <div class="card">
+                <h2>📥 Export Data</h2>
+                <p style="margin-bottom: 15px; color: #666;">Ekspor data keuangan Anda dalam berbagai format</p>
+                <button onclick="exportCSV()" style="margin-bottom: 10px;">📊 Export ke CSV</button>
+                <button onclick="exportJSON()" style="background: #50c878; margin-bottom: 10px;">📁 Export ke JSON</button>
+                <button onclick="exportPDF()" style="background: #ff6b6b;">📄 Export ke PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        // Data Storage
+        let transaksiList = JSON.parse(localStorage.getItem('transaksiList')) || [];
+        let budgetList = JSON.parse(localStorage.getItem('budgetList')) || [];
+
+        // Set tanggal default ke hari ini
+        document.getElementById('tanggal').valueAsDate = new Date();
+
+        // Format Currency
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(value);
+        }
+
+        // Tambah Transaksi
+        function tambahTransaksi() {
+            const tanggal = document.getElementById('tanggal').value;
+            const kategori = document.getElementById('kategori').value;
+            const deskripsi = document.getElementById('deskripsi').value;
+            const jumlah = parseFloat(document.getElementById('jumlah').value);
+            const tipe = document.getElementById('tipe').value;
+
+            if (!tanggal || !kategori || !jumlah || !tipe) {
+                showAlert('Harap isi semua field yang wajib', 'error');
+                return;
+            }
+
+            if (jumlah <= 0) {
+                showAlert('Jumlah harus lebih dari 0', 'error');
+                return;
+            }
+
+            const transaksi = {
+                id: Date.now(),
+                tanggal,
+                kategori,
+                deskripsi: deskripsi || '-',
+                jumlah,
+                tipe
+            };
+
+            transaksiList.unshift(transaksi);
+            saveData();
+            resetForm();
+            updateDisplay();
+            showAlert('Transaksi berhasil ditambahkan!', 'success');
+        }
+
+        // Reset Form
+        function resetForm() {
+            document.getElementById('tanggal').valueAsDate = new Date();
+            document.getElementById('kategori').value = '';
+            document.getElementById('deskripsi').value = '';
+            document.getElementById('jumlah').value = '';
+            document.getElementById('tipe').value = '';
+        }
+
+        // Hapus Transaksi
+        function hapusTransaksi(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus transaksi ini?')) {
+                transaksiList = transaksiList.filter(t => t.id !== id);
+                saveData();
+                updateDisplay();
+                showAlert('Transaksi berhasil dihapus!', 'success');
+            }
+        }
+
+        // Update Display
+        function updateDisplay() {
+            updateDashboard();
+            updateTabelTransaksi();
+            updateLaporanKategori();
+            updateAnalisis();
+            updateAnggaran();
+        }
+
+        // Update Dashboard
+        function updateDashboard() {
+            const pemasukan = transaksiList
+                .filter(t => t.tipe === 'Pemasukan')
+                .reduce((sum, t) => sum + t.jumlah, 0);
+            
+            const pengeluaran = transaksiList
+                .filter(t => t.tipe === 'Pengeluaran')
+                .reduce((sum, t) => sum + t.jumlah, 0);
+
+            const saldo = pemasukan - pengeluaran;
+
+            document.getElementById('totalPendapatan').textContent = formatCurrency(pemasukan);
+            document.getElementById('totalPengeluaran').textContent = formatCurrency(pengeluaran);
+            
+            const saloBersihEl = document.getElementById('saloBersih');
+            saloBersihEl.textContent = formatCurrency(saldo);
+            saloBersihEl.className = 'summary-value ' + (saldo >= 0 ? 'success' : 'danger');
+            
+            document.getElementById('jumlahTransaksi').textContent = transaksiList.length;
+        }
+
+        // Update Tabel Transaksi
+        function updateTabelTransaksi(data = null) {
+            const tbody = document.getElementById('transaksiBody');
+            const displayData = data || transaksiList;
+
+            if (displayData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #999;">Belum ada data transaksi</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = displayData.map(t => `
+                <tr>
+                    <td>${new Date(t.tanggal).toLocaleDateString('id-ID')}</td>
+                    <td>${t.kategori}</td>
+                    <td>${t.deskripsi}</td>
+                    <td><strong>${t.tipe === 'Pemasukan' ? '✓' : '✗'} ${t.tipe}</strong></td>
+                    <td class="currency">${t.tipe === 'Pemasukan' ? '+' : '-'} ${formatCurrency(t.jumlah)}</td>
+                    <td><button class="delete-btn" onclick="hapusTransaksi(${t.id})">Hapus</button></td>
+                </tr>
+            `).join('');
+        }
+
+        // Filter Transaksi
+        function filterTransaksi() {
+            const tipe = document.getElementById('filterTipe').value;
+            const kategori = document.getElementById('filterKategori').value;
+            const bulan = document.getElementById('filterBulan').value;
+
+            let filtered = transaksiList;
+
+            if (tipe) {
+                filtered = filtered.filter(t => t.tipe === tipe);
+            }
+
+            if (kategori) {
+                filtered = filtered.filter(t => t.kategori === kategori);
+            }
+
+            if (bulan) {
+                filtered = filtered.filter(t => t.tanggal.startsWith(bulan));
+            }
+
+            updateTabelTransaksi(filtered);
+        }
+
+        // Reset Filter
+        function resetFilter() {
+            document.getElementById('filterTipe').value = '';
+            document.getElementById('filterKategori').value = '';
+            document.getElementById('filterBulan').value = '';
+            updateTabelTransaksi();
+        }
+
+        // Update Laporan Kategori
+        function updateLaporanKategori() {
+            const categories = {};
+
+            transaksiList.forEach(t => {
+                if (!categories[t.kategori]) {
+                    categories[t.kategori] = { pemasukan: 0, pengeluaran: 0 };
+                }
+                if (t.tipe === 'Pemasukan') {
+                    categories[t.kategori].pemasukan += t.jumlah;
+                } else {
+                    categories[t.kategori].pengeluaran += t.jumlah;
+                }
+            });
+
+            const tbody = document.getElementById('kategoriBody');
+            if (Object.keys(categories).length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #999;">Belum ada data</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = Object.entries(categories).map(([kat, data]) => {
+                const saldo = data.pemasukan - data.pengeluaran;
+                return `
+                    <tr>
+                        <td><strong>${kat}</strong></td>
+                        <td class="currency" style="color: #27ae60;">+ ${formatCurrency(data.pemasukan)}</td>
+                        <td class="currency" style="color: #e74c3c;">- ${formatCurrency(data.pengeluaran)}</td>
+                        <td class="currency">${formatCurrency(saldo)}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Update Analisis
+        function updateAnalisis() {
+            const container = document.getElementById('analisisContainer');
+            
+            const pengeluaran = transaksiList
+                .filter(t => t.tipe === 'Pengeluaran')
+                .reduce((sum, t) => sum + t.jumlah, 0);
+
+            if (pengeluaran === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">Belum ada pengeluaran untuk dianalisis</p>';
+                return;
+            }
+
+            const categories = {};
+            transaksiList.filter(t => t.tipe === 'Pengeluaran').forEach(t => {
+                categories[t.kategori] = (categories[t.kategori] || 0) + t.jumlah;
+            });
+
+            let html = '<div style="padding: 15px;">';
+            Object.entries(categories).forEach(([kat, value]) => {
+                const percentage = ((value / pengeluaran) * 100).toFixed(1);
+                html += `
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span><strong>${kat}</strong></span>
+                            <span>${percentage}% (${formatCurrency(value)})</span>
+                        </div>
+                        <div style="width: 100%; height: 20px; background: #e0e0e0; border-radius: 10px; overflow: hidden;">
+                            <div style="width: ${percentage}%; height: 100%; background: linear-gradient(90deg, #667eea, #764ba2);"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Tambah Anggaran
+        function tambahAnggaran() {
+            const kategori = document.getElementById('kategoriAnggaran').value;
+            const nilai = parseFloat(document.getElementById('nilaiAnggaran').value);
+
+            if (!kategori || !nilai || nilai <= 0) {
+                showAlert('Harap isi kategori dan nilai anggaran', 'error');
+                return;
+            }
+
+            const existing = budgetList.findIndex(b => b.kategori === kategori);
+            if (existing !== -1) {
+                budgetList[existing].nilai = nilai;
+            } else {
+                budgetList.push({ kategori, nilai });
+            }
+
+            saveData();
+            document.getElementById('kategoriAnggaran').value = '';
+            document.getElementById('nilaiAnggaran').value = '';
+            updateAnggaran();
+            showAlert('Anggaran berhasil disimpan!', 'success');
+        }
+
+        // Update Anggaran
+        function updateAnggaran() {
+            const container = document.getElementById('daftarAnggaran');
+
+            if (budgetList.length === 0) {
+                container.innerHTML = '<p style="color: #999; text-align: center;">Belum ada anggaran</p>';
+                return;
+            }
+
+            let html = '<h3 style="margin-bottom: 10px; color: #667eea;">Daftar Anggaran</h3>';
+            html += '<div style="space-y: 10px;">';
+
+            budgetList.forEach(budget => {
+                const pengeluaran = transaksiList
+                    .filter(t => t.kategori === budget.kategori && t.tipe === 'Pengeluaran')
+                    .reduce((sum, t) => sum + t.jumlah, 0);
+
+                const percentage = ((pengeluaran / budget.nilai) * 100).toFixed(1);
+                const statusColor = percentage > 100 ? '#ff6b6b' : (percentage > 80 ? '#f39c12' : '#27ae60');
+
+                html += `
+                    <div style="background: #f5f5f5; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <strong>${budget.kategori}</strong>
+                            <span style="color: ${statusColor}; font-weight: bold;">${percentage}%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9em; margin-bottom: 8px;">
+                            <span>Terpakai: ${formatCurrency(pengeluaran)}</span>
+                            <span>Anggaran: ${formatCurrency(budget.nilai)}</span>
+                        </div>
+                        <div style="width: 100%; height: 10px; background: #e0e0e0; border-radius: 5px; overflow: hidden; margin-bottom: 8px;">
+                            <div style="width: ${Math.min(percentage, 100)}%; height: 100%; background: ${statusColor};"></div>
+                        </div>
+                        <button onclick="hapusAnggaran('${budget.kategori}')" style="padding: 5px 10px; font-size: 0.8em; width: 100%;">Hapus Anggaran</button>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Hapus Anggaran
+        function hapusAnggaran(kategori) {
+            if (confirm('Hapus anggaran ' + kategori + '?')) {
+                budgetList = budgetList.filter(b => b.kategori !== kategori);
+                saveData();
+                updateAnggaran();
+                showAlert('Anggaran berhasil dihapus!', 'success');
+            }
+        }
+
+        // Export CSV
+        function exportCSV() {
+            let csv = 'Tanggal,Kategori,Deskripsi,Tipe,Jumlah\n';
+            transaksiList.forEach(t => {
+                csv += `${t.tanggal},"${t.kategori}","${t.deskripsi}",${t.tipe},${t.jumlah}\n`;
+            });
+
+            downloadFile(csv, 'keuangan.csv', 'text/csv');
+        }
+
+        // Export JSON
+        function exportJSON() {
+            const data = {
+                tanggalExport: new Date().toLocaleDateString('id-ID'),
+                transaksi: transaksiList,
+                anggaran: budgetList
+            };
+
+            downloadFile(JSON.stringify(data, null, 2), 'keuangan.json', 'application/json');
+        }
+
+        // Export PDF
+        function exportPDF() {
+            const element = document.createElement('div');
+            const pemasukan = transaksiList
+                .filter(t => t.tipe === 'Pemasukan')
+                .reduce((sum, t) => sum + t.jumlah, 0);
+            
+            const pengeluaran = transaksiList
+                .filter(t => t.tipe === 'Pengeluaran')
+                .reduce((sum, t) => sum + t.jumlah, 0);
+
+            element.innerHTML = `
+                <h1>Laporan Manajemen Keuangan</h1>
+                <p>Tanggal Export: ${new Date().toLocaleDateString('id-ID')}</p>
+                <h2>Ringkasan</h2>
+                <p>Total Pemasukan: ${formatCurrency(pemasukan)}</p>
+                <p>Total Pengeluaran: ${formatCurrency(pengeluaran)}</p>
+                <p>Saldo Bersih: ${formatCurrency(pemasukan - pengeluaran)}</p>
+                <h2>Daftar Transaksi</h2>
+                <table border="1" cellpadding="5" style="width: 100%;">
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Kategori</th>
+                        <th>Deskripsi</th>
+                        <th>Tipe</th>
+                        <th>Jumlah</th>
+                    </tr>
+                    ${transaksiList.map(t => `
+                        <tr>
+                            <td>${t.tanggal}</td>
+                            <td>${t.kategori}</td>
+                            <td>${t.deskripsi}</td>
+                            <td>${t.tipe}</td>
+                            <td>Rp ${t.jumlah.toLocaleString('id-ID')}</td>
+                        </tr>
+                    `).join('')}
+                </table>
+            `;
+
+            html2pdf().set({
+                margin: 10,
+                filename: 'Laporan_Keuangan.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+            }).save(element);
+        }
+
+        // Download File
+        function downloadFile(content, filename, type) {
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:' + type + ';charset=utf-8,' + encodeURIComponent(content));
+            element.setAttribute('download', filename);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        // Show Alert
+        function showAlert(message, type) {
+            const container = document.getElementById('alert-container');
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-' + type;
+            alert.textContent = message;
+            container.appendChild(alert);
+
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+
+        // Save Data to LocalStorage
+        function saveData() {
+            localStorage.setItem('transaksiList', JSON.stringify(transaksiList));
+            localStorage.setItem('budgetList', JSON.stringify(budgetList));
+        }
+
+        // Initialize
+        updateDisplay();
+    </script>
+</body>
+</html>
